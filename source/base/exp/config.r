@@ -25,7 +25,7 @@ require("foreign");
 require("caret");
 
 # Parallelization
-require("parallel"); #don't need to be installed (Rcore package)
+# require("parallel"); #don't need to be installed (Rcore package)
 
 # Meta-heuristic packages (GA, PSO, EDA, GS)
 require("GA");
@@ -70,8 +70,8 @@ FOLDS = 10;
 EPOCHS = 30;
 
 #list of heuristics
-# HEURISTICS = c("PSO", "RS", "DF");
-HEURISTICS = c("DF", "DF");
+HEURISTICS = c("PSO", "RS", "DF");
+# HEURISTICS = c("DF", "DF");
 
 #list of schedules
 SCHEDULE = c(0, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100);
@@ -88,13 +88,13 @@ SCHEDULE = c(0, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100);
 # 	- Meta-heuristics parameters
 
 #population size
-POP.SIZE = 10 #100 #20 #100;
+POP.SIZE = 20 #100;
 
 #number of generations without improvement
 NOT.CHANGE = 10;
 
 # maximum number of iterations
-MAX.ITERATIONS = 3 #50;
+MAX.ITERATIONS = 50;
 
 #Rounding solutions
 ROUNDING = 5;

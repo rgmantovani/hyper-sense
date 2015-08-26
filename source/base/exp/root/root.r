@@ -1,7 +1,7 @@
 ################################################################################################
 ################################################################################################
 
-root = function(files, dirs, hyper.space) {
+root = function(files, dirs, space) {
 	
 	count = 0;
 	
@@ -32,7 +32,7 @@ root = function(files, dirs, hyper.space) {
 			# Running EPOCHS times
 			cat("/")
 			heur = parallel::mclapply(1:EPOCHS,  function(epoch){
-				obj = pattern(data, filename, dirs, hyper.space, epoch);
+				obj = pattern(data, filename, dirs, space, epoch);
 				cat("=");
 				return (obj);
 			}, mc.cores = parallel::detectCores());
@@ -40,13 +40,12 @@ root = function(files, dirs, hyper.space) {
 
 			#Remove the dataset temporary folder and files
 			unlink(dirs$temp.dir, recursive = TRUE);
-
 			
 			# Binding the Full data frame with results
 			full = do.call("rbind", lapply(1:EPOCHS, function(i){
 				exec = heur[[i]];
-				temp = do.call("rbind", lapply(exec, function(schedule){
-					return(c(schedule$schedule, schedule$measures));
+				temp = do.call("rbind", lapply(exec, function(sch){
+					return(c(sch$schedule, sch$measures));
 				}));
 				return(cbind(i, temp));
 			}));
@@ -56,16 +55,7 @@ root = function(files, dirs, hyper.space) {
 			# Saving measures from all executions
 			dump("full", meta.file)
 
-
 			# Saving complete trace of all executions
-			traces = do.call("rbind", lapply(1:EPOCHS, function(i){
-				exec = heur[[i]];
-				temp = do.call("rbind", lapply(exec, function(schedule){
-					return(c(schedule$schedule, schedule$measures));
-				}));
-				return(cbind(i, temp));
-			}));
-
 			all.traces = heur;
 			dump("all.traces", trace.file);
 		
@@ -92,7 +82,7 @@ pattern = function(data, filename, dirs, hyper.space, i){
 		}
 	
 		#Run for the schedule
-		ret = run.schedule(data, path, i, results.file);
+		ret = run.schedule(data, hyper.space, path, i, results.file);
   	}
   	#Getting results alredady computed from files on disk
   	else{
@@ -106,7 +96,7 @@ pattern = function(data, filename, dirs, hyper.space, i){
 ################################################################################################
 ################################################################################################
 
-run.schedule = function(data, path, i, results.file){
+run.schedule = function(data, hyper.space, path, i, results.file){
 
 	#Get incremental indexes
 	INDEXES = sampling(data);

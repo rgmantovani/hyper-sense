@@ -44,24 +44,11 @@ fitness.fn = function(x, temp, hyper.space){
     #perform feature selection
     n = length(x);
   
-    # if(x[n] == 1){
-    #     # cat(' - performing feature selection ...\n');
-    #     temp = feature.selection(temp);
-    # }
-   
-	#FOLS-CV extracting the classifier performance
+   #FOLS-CV extracting the classifier performance
     aux = do.call("rbind", lapply(1:FOLDS, function(i){
 
         #treinar svm com Train, e validar com teste
         data.train = temp$train[[i]];
-
-        # #Applying data balancing
-        # if(x[n-1]){
-        #     # cat(" - balancing training data ... \n");
-        #     data.train = SMOTE(as.formula("Class ~ ."), data.train)
-        #     # cat("depois do smote \n")
-        # }
-
         data.valid = temp$valid[[i]];
         data.test = temp$test[[i]];
 

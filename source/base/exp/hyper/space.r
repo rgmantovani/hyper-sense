@@ -18,7 +18,6 @@ get.hyper.space = function(classifier, n.eval){
 	space = NULL;
 	temp = paste("get", tolower(classifier), "space", sep=".");
 	space = do.call(temp, list(n.eval));
-
 	return(space);
 }
 

@@ -23,13 +23,12 @@ run = function() {
 
 	#Reading Datasets Files
 	files = list.files(paste(HOMEDIR, DATABASE, SUBDIR, sep=""));
-	# files = files[21];
+	
 	if(length(files) != 0){
 
-		dirs = creating.folders();
 		#Running ML algorithms and Optimizatin techniques
+		dirs = creating.folders();
 		root(files, dirs, hyper.space);
-		
 		cat("\n - Done ... \n");
 		
 	}else{
