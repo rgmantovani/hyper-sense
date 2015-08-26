@@ -1,0 +1,9 @@
+Dataset sub-directories:
+
+	- Evaluation: subset of datasets used to evaluate methodologies (short experiments)
+
+	- General: a major number of datasets used in experiments (complete experiments)
+
+	- High-attrs: datasets with high number of attributes, above 100 attrs
+
+	- High-examples: datasets with high number of examples, above 5000 examples

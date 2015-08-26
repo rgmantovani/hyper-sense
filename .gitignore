@@ -1,0 +1,24 @@
+
+#ignoring dataset files
+
+source/database/originals/
+source/database/normalized/error/
+source/database/normalized/high-attrs/
+source/database/normalized/high-examples/
+
+#ignoring log files
+source/base/out.log
+*.log
+
+#ignoring temp files
+source/base/temp/
+
+#ignoring fold files
+source/base/folds/
+
+#ignoring trace files
+source/base/trace
+
+
+
+
