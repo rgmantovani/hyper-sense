@@ -43,22 +43,16 @@ DATABASE = "/database/";
 OUTPUT = "/results/"
 
 # datasets to execute
-# SUBDIR = c("normalized/general/");
-SUBDIR = c("normalized/evaluation/");
+SUBDIR = c("normalized/general/");
 
 #Algorithm to be optimized
-# ALGORITHM = "C45" 
 ALGORITHM = "SVM";
 
 # number of folds
 FOLDS = 10;
 
-# number of repetitions
-# EPOCHS = 30;
-
 #list of heuristics
-# HEURISTICS = c("PSO", "RS", "DF");
-HEURISTICS = c("RS", "RS");
+HEURISTICS = c("PSO", "RS", "DF");
 
 #list of schedules
 SCHEDULE = c(0, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100);
@@ -75,13 +69,13 @@ SCHEDULE = c(0, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100);
 # 	- Meta-heuristics parameters
 
 #population size
-POP.SIZE = 3 #25 ;
+POP.SIZE = 25 ;
 
 #number of generations without improvement
 NOT.CHANGE = 10;
 
 # maximum number of iterations
-MAX.ITERATIONS = 2 #100;
+MAX.ITERATIONS = 100;
 
 #Rounding solutions
 ROUNDING = 5;
