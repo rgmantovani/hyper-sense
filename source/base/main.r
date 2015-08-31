@@ -14,25 +14,25 @@ setup = function() {
 ################################################################################################
 ################################################################################################
 
-run = function() {
+run = function(datafile, epoch){
 
 	# * Getting Hyper-space problem
 	classifier = ALGORITHM;
 	n.eval = (POP.SIZE * MAX.ITERATIONS);
 	hyper.space = get.hyper.space(classifier, n.eval);
 
-	#Reading Datasets Files
-	files = list.files(paste(HOMEDIR, DATABASE, SUBDIR, sep=""));
+	#Reading Dataset Files
+	file = paste(HOMEDIR, DATABASE, SUBDIR, datafile, ".arff", sep="");
 	
-	if(length(files) != 0){
+	if(file.exists(file)){
 
 		#Running ML algorithms and Optimizatin techniques
-		dirs = creating.folders();
-		root(files, dirs, hyper.space);
-		cat("\n - Done ... \n");
+		dirs = creating.folders(datafile);
+		root(datafile, dirs, hyper.space, epoch);
+		# cat("\n - Done ... \n");
 		
 	}else{
-		cat(" ERROR: The database directory is not correct. Please, 
+		cat(" ERROR: The database file/path is not correct. Please, 
 			verify the \'subdir\' parameter in the config file.\n");
 	}
 
@@ -41,20 +41,32 @@ run = function() {
 ################################################################################################
 ################################################################################################
 
-main = function(){
+main = function(datafile, epoch){
 
 	cat(" * Loading R files ... \n\n");
 	setup();
 	
 	cat(" * Running Base level algorithms ... \n\n");
-	run();
+	cat(" [*] Execution number: ", epoch ,"\n");
+	run(datafile, epoch);
 
 }
 
 ################################################################################################
 ################################################################################################
 
-main();
+options(echo=TRUE) 
+args <- commandArgs(trailingOnly = TRUE)
+
+# Parse arguments (we expect the form --arg=value)
+parseArgs <- function(x) strsplit(sub("^--", "", x), "=")
+argsDF <- as.data.frame(do.call("rbind", parseArgs(args)))
+argsL <- as.list(as.character(argsDF$V2))
+
+datafile = argsL[[1]];
+epoch = as.numeric(argsL[[2]]);
+
+main(datafile, epoch);
 
 ################################################################################################
 ################################################################################################

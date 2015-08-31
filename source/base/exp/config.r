@@ -1,8 +1,8 @@
 ################################################################################################
 ################################################################################################
 
-# install.packages(c("e1071", "PMCMR", "DMwR", "foreign", "caret", 
-# 	"GA", "pso", "copulaedas", "NMOF"));
+# Installing packages
+# install.packages(c("e1071", "PMCMR", "DMwR", "foreign", "caret", "pso"));
 
 # Packages
 
@@ -15,27 +15,14 @@ require("PMCMR");
 # SMOTE balancing
 require("DMwR");
 
-# deep learning package
-# require("h2o"); # not using yet
-
 # arff files
 require("foreign");
 
 # measures / cross validation
 require("caret");
 
-# Parallelization
-# require("parallel"); #don't need to be installed (Rcore package)
-
-# Meta-heuristic packages (GA, PSO, EDA, GS)
-require("GA");
+# Meta-heuristic packages - PSO
 require("pso");
-require("copulaedas");
-require("NMOF");	
-
-# Packages called by namespace - otherwise causes error
-# FSelector - feature selection (uses Java)
-# Rweka - ML algorithms (uses Java)
 
 ################################################################################################
 ################################################################################################
@@ -67,11 +54,11 @@ ALGORITHM = "SVM";
 FOLDS = 10;
 
 # number of repetitions
-EPOCHS = 30;
+# EPOCHS = 30;
 
 #list of heuristics
-HEURISTICS = c("PSO", "RS", "DF");
-# HEURISTICS = c("DF", "DF");
+# HEURISTICS = c("PSO", "RS", "DF");
+HEURISTICS = c("RS", "RS");
 
 #list of schedules
 SCHEDULE = c(0, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100);
@@ -88,13 +75,13 @@ SCHEDULE = c(0, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100);
 # 	- Meta-heuristics parameters
 
 #population size
-POP.SIZE = 20 #100;
+POP.SIZE = 3 #25 ;
 
 #number of generations without improvement
 NOT.CHANGE = 10;
 
 # maximum number of iterations
-MAX.ITERATIONS = 50;
+MAX.ITERATIONS = 2 #100;
 
 #Rounding solutions
 ROUNDING = 5;

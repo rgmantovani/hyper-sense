@@ -1,102 +1,43 @@
 ################################################################################################
 ################################################################################################
 
-root = function(files, dirs, space) {
+root = function(datafile, dirs, hyper.space, epoch) {
 	
-	count = 0;
-	
-	# For each dataset file
-	for(file in files){
-		
-		filename =  gsub("*\\.(\\w*)", "\\", file);
-		count = count + 1;
+	# output file - current dataset
+	meta.file = paste(dirs$out.dir, "/", datafile, "-", epoch, ".RData", sep="");
+	trace.file = paste(dirs$trace.dir, "/", "trace-", datafile, "-", epoch, ".RData", sep="");
 
-		# output file - current dataset
-		meta.file = paste(dirs$out.dir, "/", filename, ".RData", sep="");
-		trace.file = paste(dirs$trace.dir, "/", "trace-", filename, ".RData", sep="");
+	cat("[#] File:", datafile,"\n");
 
-		cat("[#] File:", count ,"/",length(files),"-",file,"\n");
+	if(! file.exists(meta.file) ){
 
-		if(! file.exists(meta.file) ){
+		# Reading dataset
+		cat (" - reading dataset ... \n");
+		data = read.arff(paste(HOMEDIR, DATABASE, SUBDIR, datafile, ".arff", sep=""));
+		cat (" - calling optimization techniques ... \n ");
+		obj = pattern(data, dirs, hyper.space, epoch);
+		cat (" - results generated ... \n");
 
-			#temp folder to these dataset
-			temp.folder = paste(dirs$temp.dir, "/", filename, "/" , sep="")
-			if(! file.exists(temp.folder)){
-				dir.create( temp.folder , recursive=TRUE);
-			}
-			dirs$temp.dir = temp.folder;
+		# Binding the Full data frame with results
+		full = do.call("rbind", lapply(obj, function(sch){
+			return(c(sch$schedule, sch$measures));
+		}));
+	 	colnames(full)[1] = "Sampling";
 
-			# Reading dataset
-			data = read.arff(paste(HOMEDIR, DATABASE, SUBDIR, file, sep=""));
-
-			# Running EPOCHS times
-			cat("/")
-			heur = parallel::mclapply(1:EPOCHS,  function(epoch){
-				obj = pattern(data, filename, dirs, space, epoch);
-				cat("=");
-				return (obj);
-			}, mc.cores = parallel::detectCores());
-			cat("/\n");
-
-			#Remove the dataset temporary folder and files
-			unlink(dirs$temp.dir, recursive = TRUE);
+		# Saving measures and trace from all executions
+		dump("full", meta.file)
+		dump("obj", trace.file);
+		cat(" - results saved in files ...\n");
 			
-			# Binding the Full data frame with results
-			full = do.call("rbind", lapply(1:EPOCHS, function(i){
-				exec = heur[[i]];
-				temp = do.call("rbind", lapply(exec, function(sch){
-					return(c(sch$schedule, sch$measures));
-				}));
-				return(cbind(i, temp));
-			}));
-			colnames(full)[1] = "Execution";
- 			colnames(full)[2] = "Schedule";
-
-			# Saving measures from all executions
-			dump("full", meta.file)
-
-			# Saving complete trace of all executions
-			all.traces = heur;
-			dump("all.traces", trace.file);
-		
-		}else{
-			cat (" ... already computed ... \n");
-		}
+	}else{
+		cat (" ... already computed ... \n");
 	}
-}
-
-################################################################################################
-################################################################################################
-pattern = function(data, filename, dirs, hyper.space, i){
-
-	# returning object
-	results.file = paste(dirs$temp.dir, "results-", i, ".RData", sep="");
-
-	#Verify if results are already done for this thread
-	if(!file.exists(results.file)){
-
-		#Reading/Creating folds from data sampling
-		path = paste(dirs$folds.dir,"/", filename, sep="");
-		if(!file.exists(path)){
-			dir.create(path)
-		}
 	
-		#Run for the schedule
-		ret = run.schedule(data, hyper.space, path, i, results.file);
-  	}
-  	#Getting results alredady computed from files on disk
-  	else{
-  		data = dget(results.file);
-  		ret = data;
-  	}
-
-	return(ret);
 }
 
 ################################################################################################
 ################################################################################################
-
-run.schedule = function(data, hyper.space, path, i, results.file){
+pattern = function(data, dirs, hyper.space, epoch){
 
 	#Get incremental indexes
 	INDEXES = sampling(data);
@@ -112,7 +53,7 @@ run.schedule = function(data, hyper.space, path, i, results.file){
 		indexes = INDEXES[[k-1]];
 		temp = data[indexes, ];
 		
-		dumped.file = paste(path, "/schedule-", s, "-fold-", i, ".RData", sep="");
+		dumped.file = paste(dirs$folds.dir, "/sampling-", s, "-fold-", epoch, ".RData", sep="");
 		# 8 - 1 - 1 division | load previous division
 		if(!file.exists(dumped.file)){
 			folds = cfold.valid(temp);
@@ -140,9 +81,6 @@ run.schedule = function(data, hyper.space, path, i, results.file){
 		ret$trace = lapply(heur, function(temp) temp$population);
 		return(ret);	
 	});
-
-	#dumping object
-	dump("aux", file = results.file);
 
 	return(aux);
 }
