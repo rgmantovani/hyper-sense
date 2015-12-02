@@ -3,8 +3,6 @@
 
 calculateMeanDistances = function(df) {
 
-  SCHEDULE = c(50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100)
-
   aux = lapply(SCHEDULE, function(sch){
 
     id.rows = which(df[,"Sampling"] == sch)
@@ -36,6 +34,25 @@ calculateMeanDistances = function(df) {
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 
+calculateInterDistances = function(df) {
+
+  pso.sol = df[ ,1:3]
+  rs.sol  = df[ ,c(1,15:16)] 
+ 
+  pso.list = getSolutionsPerSampleSize(pso.sol)
+  rs.list = getSolutionsPerSampleSize(rs.sol)
+
+  pso.mat = internDistancesBetweenSolutions(pso.list)
+  rs.mat = internDistancesBetweenSolutions(rs.list)  
+
+  obj = list(pso.mat = pso.mat, rs.mat = rs.mat)
+  return(obj)
+
+}
+
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+
 distanceBetweenSolutions = function( vector1, vector2) {
 
   n = nrow(vector1)
@@ -45,6 +62,27 @@ distanceBetweenSolutions = function( vector1, vector2) {
 
   mean.distance = mean(unlist(aux))
   return(mean.distance)
+}
+
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+
+internDistancesBetweenSolutions = function(technique.list) {
+
+  n = length(technique.list)
+  mat = matrix(0, n, n)
+
+  for(i in 1:(n-1)){
+    for(j in (i+1):n){
+      vector1 = technique.list[[i]]
+      vector2 = technique.list[[j]]
+      mat[i, j] = distanceBetweenSolutions(vector1 = vector1, vector2 = vector2)
+    }
+  }
+
+  colnames(mat) = SCHEDULE
+  rownames(mat) = SCHEDULE
+  return(mat)
 }
 
 # ---------------------------------------------------------------------------
