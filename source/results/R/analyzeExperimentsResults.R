@@ -33,8 +33,8 @@ analyzeExperimentsResults = function() {
 
 analyzeProblem = function(problem, dir.name) {
 
-  aux = getProblemData(problem)
-  df = do.call("rbind", aux)
+  temp = getProblemData(problem)
+  df = do.call("rbind", temp)
   
   mean.distances = calculateMeanDistances(df = df)
   cat("   - Mean distances between solutions ... \n")
@@ -42,7 +42,7 @@ analyzeProblem = function(problem, dir.name) {
   intern.distances = calculateInterDistances(df = df)
   cat("   - Mean distances inter the same technique ... \n")
 
-  plottingEverything(df = df, dir.name)
+  plottingEverything(temp = temp, dir.name)
   cat("   - Heatmap plots ... \n")
 
   obj = list(df = df, mean.distances = mean.distances, 

@@ -1,8 +1,7 @@
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 
-heatmap.plot = function(dataset, prefix){
-
+heatmap.plot = function(dataset, prefix, colours = NULL){
 
  	pso.sol = as.data.frame(dataset[ ,2:3])
  	colnames(pso.sol) = c("cost", "gamma")
@@ -29,6 +28,11 @@ heatmap.plot = function(dataset, prefix){
 	g = g + ggtitle("SVM hyper-parameters space")
 	g = g + scale_shape(guide = 'none')
 	g = g + scale_size(guide = 'none')
+
+  if(!is.null(colours)){
+    g = g + scale_colour_manual(values=colours, name ="Technique")
+  }
+  
 	print(g)
 	dev.off()
 
@@ -36,8 +40,6 @@ heatmap.plot = function(dataset, prefix){
 
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
-
-
 # improvement.plot = function(data){
 
 # 	# 1 - 23

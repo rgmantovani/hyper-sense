@@ -19,6 +19,8 @@ main = function() {
 
   cat("* Calling the analysis ... \n")
   analyzeExperimentsResults()
+  
+  cat("* Done !!! \n")
 
 }
 
