@@ -10,6 +10,15 @@ source/database/normalized/high-examples/
 source/base/out.log
 *.log
 
+*.tar
+*.pdf
+
+# ignoring results that are generated
+source/results/output/
+source/results/output.zip
+
+source/mfeat_extraction/
+
 #ignoring temp files
 source/base/temp/
 
